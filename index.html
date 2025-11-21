@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Freej Swaeleh | فريج صويلح</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #d32f2f;
+      --dark-red: #b71c1c;
+      --white: #ffffff;
+      --light-gray: #f5f5f5;
+      --gray: #666;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Montserrat', 'Cairo', sans-serif; 
+      background: var(--white); color: #333; line-height: 1.6; 
+      transition: all 0.4s;
+    }
+    body.arabic { font-family: 'Cairo', sans-serif; }
+    body.rtl { direction: rtl; text-align: right; }
+    body.rtl .nav-links { left: auto; right: -100%; }
+    body.rtl .nav-links.active { right: 0; left: auto; }
+    header { background: var(--red); color: var(--white); position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    nav { max-width: 1200px; margin: 0 auto; padding: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--white); text-decoration: none; font-weight: 500; transition: opacity 0.3s; }
+    .nav-links a:hover { opacity: 0.8; }
+    .lang-switch { cursor: pointer; font-weight: 600; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 30px; }
+    .hamburger { display: none; font-size: 1.8rem; cursor: pointer; }
+    .hero { background: linear-gradient(rgba(211, 47, 47, 0.85), rgba(211, 47, 47, 0.9)), url('https://images.unsplash.com/photo-1517248135467-10532d1e2e0b?ixlib=rb-4.0.3&auto=format&fit=crop&q=80') center/cover no-repeat; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--white); margin-top: 70px; }
+    .hero-content h1 { font-family: 'Playfair Display', serif; font-size: 4.5rem; margin-bottom: 1rem; }
+    .hero-content p { font-size: 1.4rem; max-width: 700px; margin: 0 auto 2rem; }
+    .btn { background: var(--white); color: var(--red); padding: 1rem 2.5rem; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s; }
+    .btn:hover { background: var(--dark-red); color: var(--white); transform: translateY(-3px); }
+    .menu-section { max-width: 1200px; margin: 4rem auto; padding: 0 1rem; }
+    h2 { font-family: 'Playfair Display', serif; font-size: 3rem; text-align: center; margin-bottom: 3rem; color: var(--red); }
+    .category { margin-bottom: 5rem; }
+    .category h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--dark-red); margin-bottom: 1.5rem; border-bottom: 3px solid var(--red); display: inline-block; padding-bottom: 0.5rem; }
+    .menu-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 2rem; }
+    .menu-item { background: var(--light-gray); border-radius: 12px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: transform 0.3s; cursor: pointer; }
+    .menu-item:hover { transform: translateY(-8px); }
+    .item-image { width: 100%; height: 240px; object-fit: cover; } /* slightly taller for better look without text */
+    .item-content { padding: 1.5rem; text-align: center; }
+    .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; }
+    .item-name { font-weight: 700; font-size: 1.4rem; color: var(--dark-red); }
+    .price { color: var(--red); font-weight: 700; font-size: 1.4rem; }
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+    .modal-content { background: white; max-width: 520px; width: 90%; border-radius: 15px; overflow: hidden; animation: modalPop 0.4s; }
+    @keyframes modalPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal-img { width: 100%; height: 380px; object-fit: cover; }
+    .modal-body { padding: 2rem; text-align: center; }
+    .modal-body h3 { font-family: 'Playfair Display', serif; color: var(--dark-red); font-size: 2rem; margin-bottom: 0.5rem; }
+    .modal-price { font-size: 2.2rem; color: var(--red); font-weight: 700; }
+    .close { position: absolute; top: 15px; right: 25px; font-size: 3rem; color: white; cursor: pointer; font-weight: 300; }
+    footer { background: var(--red); color: var(--white); text-align: center; padding: 3rem 1rem; margin-top: 4rem; }
+    @media (max-width: 768px) {
+      .hamburger { display: block; }
+      .nav-links { position: fixed; top: 70px; left: -100%; background: var(--dark-red); height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: start; padding-top: 4rem; transition: left 0.4s; }
+      .nav-links.active { left: 0; }
+      .hero-content h1 { font-size: 3.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav>
+      <div class="logo">Freej Swaeleh</div>
+      <div class="hamburger">☰</div>
+      <div class="nav-links">
+        <a href="#home" data-en="Home" data-ar="الرئيسية">Home</a>
+        <a href="#menu" data-en="Menu" data-ar="القائمة">Menu</a>
+        <a href="#about" data-en="About" data-ar="عن المطعم">About</a>
+        <a href="#contact" data-en="Contact" data-ar="تواصل معنا">Contact</a>
+      </div>
+      <div class="lang-switch" id="langSwitch">عربي</div>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>Freej Swaeleh</h1>
+      <p data-en="Authentic Kuwaiti flavors prepared with love in the heart of Riyadh." data-ar="نكهات كويتية أصيلة محضرة بكل حب في قلب الرياض.">Authentic Kuwaiti flavors prepared with love in the heart of Riyadh.</p>
+      <a href="#menu" class="btn" data-en="View Menu" data-ar="عرض القائمة">View Menu</a>
+    </div>
+  </section>
+
+  <section id="menu" class="menu-section">
+    <h2 data-en="Our Menu" data-ar="قائمتنا">Our Menu</h2>
+
+    <!-- Soups -->
+    <div class="category">
+      <h3 data-en="Soups" data-ar="شوربات">Soups</h3>
+      <div class="menu-items">
+        <div class="menu-item" data-name-en="Shrimp Soup" data-name-ar="شوربة روبيان" data-price="16.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/soups/shrimp_soup.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/soups/shrimp_soup.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Shrimp Soup</div><div class="price">45 SAR</div></div>
+          </div>
+        </div>
+
+        <div class="menu-item" data-name-en="Lentil Soup" data-name-ar="شوربة عدس" data-price="13.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/soups/lentil_soup.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/soups/lentil_soup.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Lentil Soup</div><div class="price">13.50 SAR</div></div>
+          </div>
+        </div>
+
+        <div class="menu-item" data-name-en="Chicken Corn Soup" data-name-ar="شوربة دجاج بالذرة" data-price="13.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/soups/chicken_corn_soup.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/soups/chicken_corn_soup.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Chicken Corn Soup</div><div class="price">13.50 SAR</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pasta, Main Courses, Desserts – same clean style (descriptions removed) -->
+    <!-- All other categories follow the exact same pattern -->
+
+    <div class="category">
+      <h3 data-en="Salads & Appetizers" data-ar="سلطات ومقبلات">Salads & Appetizers</h3>
+      <div class="menu-items">
+        <div class="menu-item" data-name-en="Hummous" data-name-ar="حمص" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Hummus.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Hummus.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Hummous</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+        <div class="menu-item" data-name-en="Mutabbal" data-name-ar="متبل" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Mutabal.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Mutabal.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Mutabbal</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+        <div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Green Salad" data-name-ar="سلطة خضراء" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Green Salad</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+	<div class="menu-item" data-name-en="Yoghurt with Cucumber" data-name-ar="لبن بالخيار" data-price="10.50" data-img="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80">
+          <img src="https://raw.githubusercontent.com/freejswaelehriyadh786/freejwaelehriyadh/main/images/salad%20n%20apetizers/Yogurt_with_cucumber.jpg?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Yoghurt with Cucumber</div><div class="price">10.50 SAR</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h3 data-en="Main Courses" data-ar="الأطباق الرئيسية">Main Courses</h3>
+      <div class="menu-items">
+        <div class="menu-item" data-name-en="Osso Buco" data-name-ar="أوسوبوكو" data-price="158" data-img="https://images.unsplash.com/photo-1607013251379-e6eecfffe234?auto=format&fit=crop&q=80">
+          <img src="https://images.unsplash.com/photo-1607013251379-e6eecfffe234?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Osso Buco</div><div class="price">158 SAR</div></div>
+          </div>
+        </div>
+        <div class="menu-item" data-name-en="Branzino al Forno" data-name-ar="سمك برانزينو مخبوز" data-price="143" data-img="https://images.unsplash.com/photo-1625944230238-36c0b267f23f?auto=format&fit=crop&q=80">
+          <img src="https://images.unsplash.com/photo-1625944230238-36c0b267f23f?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Branzino al Forno</div><div class="price">143 SAR</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h3 data-en="Desserts" data-ar="الحلويات">Desserts</h3>
+      <div class="menu-items">
+        <div class="menu-item" data-name-en="Tiramisù" data-name-ar="تيراميسو" data-price="38" data-img="https://images.unsplash.com/photo-1563805042-7684c7f05791?auto=format&fit=crop&q=80">
+          <img src="https://images.unsplash.com/photo-1563805042-7684c7f05791?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Tiramisù</div><div class="price">38 SAR</div></div>
+          </div>
+        </div>
+        <div class="menu-item" data-name-en="Panna Cotta" data-name-ar="بانا كوتا" data-price="34" data-img="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&q=80">
+          <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&q=80" alt="" class="item-image">
+          <div class="item-content">
+            <div class="item-header"><div class="item-name">Panna Cotta</div><div class="price">34 SAR</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal (now only shows name + price + big photo) -->
+  <div class="modal" id="itemModal">
+    <div class="modal-content">
+      <span class="close">×</span>
+      <img id="modalImg" class="modal-img" src="" alt="">
+      <div class="modal-body">
+        <h3 id="modalName"></h3>
+        <div id="modalPrice" class="modal-price"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p data-en="Freej Swaeleh Restaurant • Riyadh, Kingdom of Saudi Arabia" data-ar="مطعم فريج صويلح • الرياض، المملكة العربية السعودية">Freej Swaeleh Restaurant • Riyadh, Kingdom of Saudi Arabia</p>
+    <p data-en="Open Saturday–Sunday | 12:00 PM – 03:00 AM" data-ar="مفتوح من الثلاثاء إلى الأحد | ١٢:٠٠ م - ٣:٠٠ ص">Open Saturday–Sunday | 12:00 PM – 03:00 AM</p>
+    <p>© 2025 Freej Swaeleh. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const langSwitch = document.getElementById('langSwitch');
+    let isArabic = false;
+
+    langSwitch.addEventListener('click', () => {
+      isArabic = !isArabic;
+      document.body.classList.toggle('arabic', isArabic);
+      document.body.classList.toggle('rtl', isArabic);
+      document.documentElement.lang = isArabic ? 'ar' : 'en';
+      document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+      langSwitch.textContent = isArabic ? 'English' : 'عربي';
+
+      document.querySelectorAll('[data-en][data-ar]').forEach(el => {
+        el.textContent = isArabic ? el.dataset.ar : el.dataset.en;
+      });
+
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.querySelector('.item-name').textContent = isArabic ? item.dataset.nameAr : item.dataset.nameEn;
+      });
+    });
+
+    const modal = document.getElementById('itemModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalName = document.getElementById('modalName');
+    const modalPrice = document.getElementById('modalPrice');
+
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        modalImg.src = item.dataset.img;
+        modalName.textContent = isArabic ? item.dataset.nameAr : item.dataset.nameEn;
+        modalPrice.textContent = item.dataset.price + ' SAR';
+        modal.style.display = 'flex';
+      });
+    });
+
+    document.querySelector('.close').onclick = () => modal.style.display = 'none';
+    window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+
+    document.querySelector('.hamburger').addEventListener('click', () => document.querySelector('.nav-links').classList.toggle('active'));
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        document.querySelector('.nav-links').classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>
